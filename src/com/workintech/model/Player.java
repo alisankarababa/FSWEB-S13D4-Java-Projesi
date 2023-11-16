@@ -6,30 +6,45 @@ public class Player {
     private int healthPercentage;
     private Weapon weapon;
 
+    private int correctedHealth(int health) {
+        if(health > 100)
+            return 100;
+
+        if(health < 0)
+            return 0;
+
+        return health;
+    }
+
     public Player(String name, int healthPercentage, Weapon weapon) {
         this.name = name;
         this.weapon = weapon;
-
-        if(healthPercentage > 100)
-            this.healthPercentage = 100;
-        else if (healthPercentage < 0)
-            this.healthPercentage = 0;
-        else
-            this.healthPercentage = healthPercentage;
+        this.healthPercentage = correctedHealth(healthPercentage);
     }
     public int healthRemaining() {
         return healthPercentage;
     }
     public void loseHealth(int damage) {
-        healthPercentage -= damage;
-        if(healthPercentage < 0)
+        if(damage < 0)
+            return;
+        healthPercentage = correctedHealth(healthPercentage - damage);
+        if(healthPercentage == 0)
             System.out.println(name + " player has been knocked out of game");
     }
 
     public void restoreHealth(int healthPotion) {
-        healthPercentage += healthPotion;
+        if(healthPotion < 0)
+            return;
 
-        if(healthPercentage > 100)
-            healthPercentage = 100;
+        healthPercentage = correctedHealth(healthPercentage + healthPotion);
+    }
+
+    @Override
+    public String toString() {
+        return "Player{" +
+                "name='" + name + '\'' +
+                ", healthPercentage=" + healthPercentage +
+                ", weapon=" + weapon +
+                '}';
     }
 }
